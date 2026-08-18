@@ -1,30 +1,49 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+const projectRoot = fileURLToPath(new URL("../", import.meta.url));
+const nextBin = fileURLToPath(new URL("../node_modules/next/dist/bin/next", import.meta.url));
+const port = 41_000 + (process.pid % 1_000);
+const origin = `http://127.0.0.1:${port}`;
+let server;
+let serverLog = "";
 
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
+async function waitForServer() {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    if (server?.exitCode !== null) {
+      throw new Error(`Next.js exited before becoming ready.\n${serverLog}`);
+    }
+    try {
+      const response = await fetch(origin);
+      if (response.ok) return;
+    } catch {
+      // The server is still starting.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`Timed out waiting for Next.js.\n${serverLog}`);
 }
 
-test("server-renders Artem's portfolio", async () => {
-  const response = await render();
+test.before(async () => {
+  server = spawn(process.execPath, [nextBin, "start", "-H", "127.0.0.1", "-p", String(port)], {
+    cwd: projectRoot,
+    env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  server.stdout.on("data", (chunk) => { serverLog += chunk; });
+  server.stderr.on("data", (chunk) => { serverLog += chunk; });
+  await waitForServer();
+});
+
+test.after(() => {
+  server?.kill("SIGTERM");
+});
+
+test("official Next.js server renders Artem's portfolio", async () => {
+  const response = await fetch(origin);
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
@@ -40,11 +59,18 @@ test("server-renders Artem's portfolio", async () => {
   assert.match(html, /id="expertise"/i);
   assert.match(html, /id="experience"/i);
   assert.match(html, /id="contact"/i);
-  assert.doesNotMatch(html, /codex-preview|SkeletonPreview|react-loading-skeleton/i);
+  assert.doesNotMatch(html, /codex-preview|SkeletonPreview|vinext/i);
 });
 
-test("removes temporary starter assets", async () => {
-  const packageJson = await readFile(new URL("../package.json", import.meta.url), "utf8");
-  assert.doesNotMatch(packageJson, /react-loading-skeleton/);
-  await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));
+test("pins the requested Next.js and Tailwind stack", async () => {
+  const packageJson = JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  );
+
+  assert.equal(packageJson.dependencies.next, "16.3.1");
+  assert.equal(packageJson.devDependencies.tailwindcss, "4.3.3");
+  assert.equal(packageJson.devDependencies["@tailwindcss/postcss"], "4.3.3");
+  assert.equal(packageJson.devDependencies["@opennextjs/cloudflare"], "1.20.2");
+  assert.equal(packageJson.devDependencies.vinext, undefined);
+  assert.equal(packageJson.devDependencies.vite, undefined);
 });

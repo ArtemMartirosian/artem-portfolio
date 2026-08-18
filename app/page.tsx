@@ -211,7 +211,7 @@ export default function Home() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="site-shell" id="top">
+    <div className="site-shell relative min-h-screen overflow-x-clip" id="top">
       <div className="ambient-glow" aria-hidden="true" />
       <div className="scroll-progress" aria-hidden="true" />
       <a className="skip-link" href="#main-content">Skip to content</a>
