@@ -52,6 +52,12 @@ test("official Next.js server renders Artem's portfolio", async () => {
   assert.match(html, /<title>Artem Martirosian — Full-Stack Developer<\/title>/i);
   assert.match(html, /Frontend-first \/ Full-stack developer/i);
   assert.match(html, /Selected builds\./i);
+  assert.match(html, /Complete project archive/i);
+  assert.match(html, /CTSoft/i);
+  assert.match(html, /Cosmobox/i);
+  assert.match(html, /UZTELECOM MyHit/i);
+  assert.match(html, /TRODAT ADMIN/i);
+  assert.match(html, /Danielyan Furniture/i);
   assert.match(html, /One signal\./i);
   assert.match(html, /Digitalize/i);
   assert.match(html, /artem\.martirosian2001@gmail\.com/i);

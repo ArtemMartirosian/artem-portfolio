@@ -121,19 +121,127 @@ const experience = [
   },
 ];
 
-const archive = [
-  "CTSoft",
-  "TLOA",
-  "Shaomacao",
-  "Coding Team",
-  "Technolab",
-  "Olympmanevich",
-  "LAG",
-  "Tumanyan Shaurma",
-  "KARAS",
-  "SKAMED",
-  "SGP",
+const projectArchive = [
+  {
+    company: "Digitalize",
+    period: "2024 — Present",
+    projects: [
+      {
+        name: "CTSoft",
+        role: "Full-Stack Developer",
+        stack: ["Vue", "Nuxt 4", "Tailwind CSS", "Node.js", "NestJS", "Element Plus", "TypeScript"],
+        link: "https://nationalsolutions.ru/",
+      },
+      {
+        name: "TLOA",
+        role: "Frontend Developer",
+        stack: ["Vue", "Tailwind CSS", "TypeScript", "Mobile app"],
+        link: null,
+      },
+      {
+        name: "Shaomacao",
+        role: "Frontend Developer",
+        stack: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"],
+        link: "https://shaomacao.com/",
+      },
+      {
+        name: "Coding Team",
+        role: "Frontend Developer",
+        stack: ["Next.js", "TypeScript", "SCSS", "Radix UI"],
+        link: "https://codingteam.ru/",
+      },
+      {
+        name: "EI",
+        role: "Frontend Developer",
+        stack: ["Next.js", "TypeScript", "Tailwind CSS", "Axios", "shadcn/ui", "Zustand", "Zod"],
+        link: "http://24ei.ru/",
+      },
+      {
+        name: "Cosmobox",
+        role: "Frontend Developer",
+        stack: ["Next.js", "TypeScript", "Tailwind CSS"],
+        link: null,
+      },
+      {
+        name: "Technolab",
+        role: "Frontend Developer",
+        stack: ["Next.js", "TypeScript", "Tailwind CSS", "Axios", "shadcn/ui", "Zustand"],
+        link: "https://technolab.ru/",
+      },
+      {
+        name: "Olympmanevich",
+        role: "Frontend Developer",
+        stack: ["Vue", "TypeScript", "Tailwind CSS", "Axios", "Zod", "Pinia", "TanStack", "shadcn/ui"],
+        link: "https://olympmanevich.ru/",
+      },
+    ],
+  },
+  {
+    company: "CodeLines",
+    period: "2024",
+    projects: [
+      {
+        name: "UZTELECOM MyHit",
+        role: "Frontend Developer",
+        stack: ["React (CRA)", "Redux", "i18n", "Axios", "CSS"],
+        link: "https://myhit.uztelecom.uz/",
+      },
+      {
+        name: "TRODAT ADMIN",
+        role: "Full-Stack Developer",
+        stack: ["React", "Vite", "TypeScript", "Ant Design", "Axios", "NestJS"],
+        link: null,
+      },
+    ],
+  },
+  {
+    company: "BeeOnCode",
+    period: "2023 — 2024",
+    projects: [
+      {
+        name: "LAG",
+        role: "Frontend Developer",
+        stack: ["Next.js", "Tailwind CSS", "i18n", "Swiper", "Axios"],
+        link: "https://lag.am/",
+      },
+      {
+        name: "Tumanyan Shaurma",
+        role: "Full-Stack Developer",
+        stack: ["Next.js", "CSS", "i18n", "Swiper", "Axios", "WebSocket"],
+        link: "https://tshaurma.com/am",
+      },
+      {
+        name: "KARAS",
+        role: "Full-Stack Developer",
+        stack: ["WebSocket", "Total.js", "CSS", "Bootstrap", "jQuery", "AngularJS", "AJAX"],
+        link: "https://www.karas.am/hy/",
+      },
+      {
+        name: "Danielyan Furniture",
+        role: "Frontend Developer",
+        stack: ["Next.js", "CSS", "i18n", "Owl Carousel", "Axios"],
+        link: "https://danielyanfurniture.com/",
+      },
+      {
+        name: "SKAMED",
+        role: "Frontend Developer",
+        stack: ["Next.js", "Tailwind CSS", "i18n", "Owl Carousel", "Axios"],
+        link: "https://www.skamed.com/",
+      },
+      {
+        name: "SGP",
+        role: "Frontend Developer",
+        stack: ["Next.js", "Tailwind CSS", "i18n", "Swiper", "Axios"],
+        link: "https://www.sgp.am/",
+      },
+    ],
+  },
 ];
+
+const projectCount = projects.length + projectArchive.reduce(
+  (total, group) => total + group.projects.length,
+  0,
+);
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -306,7 +414,7 @@ export default function Home() {
 
           <div className="hero__metrics" data-reveal style={{ "--delay": "280ms" } as CSSProperties}>
             <div><strong>4+</strong><span>years shipping</span></div>
-            <div><strong>20+</strong><span>products built</span></div>
+            <div><strong>{projectCount}</strong><span>products built</span></div>
             <div><strong>3</strong><span>engineering teams</span></div>
             <div className="hero__location"><span>Based in</span><strong>Yerevan, AM</strong></div>
           </div>
@@ -362,9 +470,63 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="archive" data-reveal>
-            <span>Also built</span>
-            <div>{archive.map((item) => <span key={item}>{item}</span>)}</div>
+          <div className="project-archive" data-reveal>
+            <div className="project-archive__intro">
+              <div>
+                <span className="section-index">Complete project archive</span>
+                <h3>Every product.<br /><em>All {projectCount}.</em></h3>
+              </div>
+              <p>
+                Six featured builds above, plus every additional product from my
+                commercial experience — grouped by the teams behind the work.
+              </p>
+            </div>
+
+            <div className="project-archive__groups">
+              {projectArchive.map((group, groupIndex) => {
+                const previousCount = projectArchive
+                  .slice(0, groupIndex)
+                  .reduce((total, item) => total + item.projects.length, projects.length);
+
+                return (
+                  <section className="project-group" key={group.company} aria-labelledby={`projects-${group.company.toLowerCase()}`}>
+                    <header className="project-group__heading">
+                      <h4 id={`projects-${group.company.toLowerCase()}`}>{group.company}</h4>
+                      <span>{group.period}</span>
+                    </header>
+                    <div className="project-group__list">
+                      {group.projects.map((project, projectIndex) => (
+                        <article className="archive-project" key={project.name}>
+                          <span className="archive-project__index">
+                            {String(previousCount + projectIndex + 1).padStart(2, "0")}
+                          </span>
+                          <div className="archive-project__identity">
+                            <h5>{project.name}</h5>
+                            <p>{project.role}</p>
+                          </div>
+                          <ul className="archive-project__stack" aria-label={`${project.name} technology stack`}>
+                            {project.stack.map((tool) => <li key={tool}>{tool}</li>)}
+                          </ul>
+                          {project.link ? (
+                            <a
+                              className="archive-project__link"
+                              href={project.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`Open ${project.name} project`}
+                            >
+                              View <span>↗</span>
+                            </a>
+                          ) : (
+                            <span className="archive-project__private">Private</span>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
           </div>
         </section>
 
