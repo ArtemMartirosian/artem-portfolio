@@ -72,11 +72,15 @@ test("pins the requested Next.js and Tailwind stack", async () => {
   const packageJson = JSON.parse(
     await readFile(new URL("../package.json", import.meta.url), "utf8"),
   );
+  const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 
   assert.equal(packageJson.dependencies.next, "16.3.1");
+  assert.equal(packageJson.engines.node, "22.x");
   assert.equal(packageJson.devDependencies.tailwindcss, "4.3.3");
   assert.equal(packageJson.devDependencies["@tailwindcss/postcss"], "4.3.3");
   assert.equal(packageJson.devDependencies["@opennextjs/cloudflare"], "1.20.2");
   assert.equal(packageJson.devDependencies.vinext, undefined);
   assert.equal(packageJson.devDependencies.vite, undefined);
+  assert.match(nextConfig, /process\.env\.VERCEL/);
+  assert.match(nextConfig, /output:\s*["']standalone["']/);
 });
