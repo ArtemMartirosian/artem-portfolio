@@ -65,6 +65,9 @@ test("official Next.js server renders Artem's portfolio", async () => {
   assert.match(html, /id="expertise"/i);
   assert.match(html, /id="experience"/i);
   assert.match(html, /id="contact"/i);
+  assert.match(html, /id="mobile-navigation"/i);
+  assert.match(html, /aria-controls="mobile-navigation"/i);
+  assert.match(html, /04 sections/i);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|vinext/i);
 });
 

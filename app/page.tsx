@@ -296,8 +296,28 @@ export default function Home() {
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", menuOpen);
-    return () => document.body.classList.remove("menu-open");
+    if (!menuOpen) return () => document.body.classList.remove("menu-open");
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.classList.remove("menu-open");
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [menuOpen]);
+
+  useEffect(() => {
+    const desktopViewport = window.matchMedia("(min-width: 821px)");
+    const closeAtDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setMenuOpen(false);
+    };
+
+    desktopViewport.addEventListener("change", closeAtDesktop);
+    return () => desktopViewport.removeEventListener("change", closeAtDesktop);
+  }, []);
 
   const handleStackMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -343,21 +363,50 @@ export default function Home() {
             type="button"
             aria-label={menuOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setMenuOpen((open) => !open)}
           >
-            <span /><span />
+            <span className="menu-toggle__label">{menuOpen ? "Close" : "Menu"}</span>
+            <span className="menu-toggle__icon" aria-hidden="true"><i /><i /></span>
           </button>
         </div>
-        <div className={`mobile-menu ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
-          <nav aria-label="Mobile navigation">
-            <a href="#work" onClick={closeMenu}><span>01</span> Work</a>
-            <a href="#expertise" onClick={closeMenu}><span>02</span> Expertise</a>
-            <a href="#experience" onClick={closeMenu}><span>03</span> Experience</a>
-            <a href="#contact" onClick={closeMenu}><span>04</span> Contact</a>
-          </nav>
+      </header>
+      <div
+        className={`mobile-menu ${menuOpen ? "is-open" : ""}`}
+        id="mobile-navigation"
+        aria-hidden={!menuOpen}
+      >
+        <div className="mobile-menu__meta" aria-hidden="true">
+          <span>Navigation</span>
+          <span>04 sections</span>
+        </div>
+        <nav aria-label="Mobile navigation">
+          <a href="#work" onClick={closeMenu}>
+            <span className="mobile-menu__index">01</span>
+            <span className="mobile-menu__label">Work</span>
+            <span className="mobile-menu__arrow" aria-hidden="true">↘</span>
+          </a>
+          <a href="#expertise" onClick={closeMenu}>
+            <span className="mobile-menu__index">02</span>
+            <span className="mobile-menu__label">Expertise</span>
+            <span className="mobile-menu__arrow" aria-hidden="true">↘</span>
+          </a>
+          <a href="#experience" onClick={closeMenu}>
+            <span className="mobile-menu__index">03</span>
+            <span className="mobile-menu__label">Experience</span>
+            <span className="mobile-menu__arrow" aria-hidden="true">↘</span>
+          </a>
+          <a href="#contact" onClick={closeMenu}>
+            <span className="mobile-menu__index">04</span>
+            <span className="mobile-menu__label">Contact</span>
+            <span className="mobile-menu__arrow" aria-hidden="true">↘</span>
+          </a>
+        </nav>
+        <div className="mobile-menu__footer">
+          <p><span className="live-dot" /> Available for selected projects</p>
           <p>Yerevan, Armenia · GMT+4</p>
         </div>
-      </header>
+      </div>
 
       <main id="main-content">
         <section className="hero section-pad" aria-labelledby="hero-title">
