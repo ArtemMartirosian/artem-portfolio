@@ -36,7 +36,7 @@ const projects = [
     label: "Data-rich product UI",
     role: "Frontend Developer",
     stack: ["Vue", "Vuex", "ApexCharts", "Vue i18n", "SCSS"],
-    link: "https://inwis.ru/",
+    link: "https://investor.inwis.ru/login",
     accent: "#8a7dff",
     mark: "IW",
     kind: "data",
