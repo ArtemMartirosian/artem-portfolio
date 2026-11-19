@@ -103,7 +103,7 @@ const experience = [
     period: "2024 — Now",
     role: "Full-Stack Developer",
     note: "Building frontend and backend across product teams with Next.js, Vue, Nuxt, Node.js and NestJS.",
-    work: "CTSoft · TLOA · Shaomacao · Alllocal · DavMar · inwis + more",
+    work: "CTSoft · Grqaser.am · TLOA · Shaomacao · Alllocal · DavMar · inwis + more",
   },
   {
     company: "CodeLines",
@@ -126,6 +126,13 @@ const projectArchive = [
     company: "Digitalize",
     period: "2024 — Present",
     projects: [
+      {
+        name: "Grqaser.am",
+        role: "Full-Stack Developer",
+        description: "Online bookstore with a storefront, shopping cart, customer accounts, order management, and an admin dashboard. Built with Next.js, React, TypeScript, Tailwind CSS, Node.js, NestJS, Fastify, Prisma, PostgreSQL, and Docker.",
+        stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js", "NestJS", "Fastify", "Prisma", "PostgreSQL", "Docker"],
+        link: "https://grqaser.am/",
+      },
       {
         name: "CTSoft",
         role: "Full-Stack Developer",
@@ -462,7 +469,7 @@ export default function Home() {
           </div>
 
           <div className="hero__metrics" data-reveal style={{ "--delay": "280ms" } as CSSProperties}>
-            <div><strong>4+</strong><span>years shipping</span></div>
+            <div><strong>3+</strong><span>years shipping</span></div>
             <div><strong>{projectCount}</strong><span>products built</span></div>
             <div><strong>3</strong><span>engineering teams</span></div>
             <div className="hero__location"><span>Based in</span><strong>Yerevan, AM</strong></div>
@@ -569,6 +576,9 @@ export default function Home() {
                           ) : (
                             <span className="archive-project__private">Private</span>
                           )}
+                          {"description" in project && project.description && (
+                            <p className="archive-project__description">{project.description}</p>
+                          )}
                         </article>
                       ))}
                     </div>
@@ -597,14 +607,17 @@ export default function Home() {
           </div>
           <div className="engineering-note" data-reveal>
             <span>Beyond the stack</span>
-            <p>Code review · Team lead · Mentoring · Performance · Architecture · CI/CD</p>
+            <div>
+              <p>Code review · Team lead · Mentoring · Performance · Architecture · CI/CD</p>
+              <p>AI development tools: Codex · Claude</p>
+            </div>
           </div>
         </section>
 
         <section className="experience section-pad" id="experience" aria-labelledby="experience-title">
           <div className="section-heading" data-reveal>
             <div><span className="section-index">03 / Experience</span><h2 id="experience-title">Where I&apos;ve<br />made products.</h2></div>
-            <p>Four-plus years moving between interface detail and full-stack delivery in fast-paced teams.</p>
+            <p>Three-plus years moving between interface detail and full-stack delivery in fast-paced teams.</p>
           </div>
           <div className="timeline">
             {experience.map((item, index) => (
