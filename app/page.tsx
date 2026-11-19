@@ -93,7 +93,7 @@ const expertise = [
     number: "03",
     title: "Backend & data",
     copy: "APIs and server-side systems that connect the interface to reliable business logic and structured data.",
-    tools: ["Node / Nest / Express", "Laravel", "PostgreSQL / MySQL", "Docker / CI/CD"],
+    tools: ["Node / Nest / Express", "Laravel", "PostgreSQL / MySQL / MongoDB", "Docker / CI/CD"],
   },
 ];
 
